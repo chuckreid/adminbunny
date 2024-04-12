@@ -2,6 +2,9 @@ import os, discord, random, traceback, datetime
 from discord.ext import commands
 from dotenv import load_dotenv
 
+fusilli = 0
+cookie = 0
+
 # Loading Discord token and guild IDs from an external resource
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -21,8 +24,7 @@ async def on_ready():
         f'{client.user} is connected to the following guild:\n'
         f'{guild.name}(id: {guild.id})'
     )
-    fusilli = 0
-    cookie = 0
+    
 
 # Anything within this event will run whenever there is a new member to the guild
 @client.event
@@ -40,6 +42,8 @@ async def on_member_join(member):
 # Anthing within this event will run whenever a message is sent in the chat channel
 @client.event
 async def on_message(message):
+    global fusilli
+    global cookie
     try:
         # A growing collection of facts about my two bunnies
         pellet_messages = [
@@ -82,7 +86,7 @@ async def on_message(message):
         if message.author == client.user:
             return
         else:
-            if 'carrot' in message.content.lower() or '🥕' in message.content and 'fusilli' in message.content.lower():
+            if '🥕' in message.content and 'fusilli' in message.content.lower():
                 response = random.choice(carrot_messages)
                 await message.channel.send(response)
                 # await message.channel.send("*Cookie is eating a carrot*")
@@ -113,10 +117,14 @@ async def on_message(message):
             if '!carrotcount' in message.content.lower():
                 curr_date = datetime.datetime.now()
                 form_date = curr_date.strftime("%B %d %Y %H:%M:%S")
-                print('-------- TOTAL CARROT SCOREBOARD --------')
-                print(f'As of {form_date}')
-                print(f'Total carrots given to Fusilli: {fusilli}')
-                print(f'Total carrots given to Cookie : {cookie}')
+                message1 = '-------- TOTAL CARROT SCOREBOARD --------'
+                message2 = f'As of {form_date}'
+                message3 = f'Total carrots given to Fusilli: {fusilli}'
+                message4 = f'Total carrots given to Cookie : {cookie}'
+                await message.channel.send(message1)
+                await message.channel.send(message2)
+                await message.channel.send(message3)
+                await message.channel.send(message4)
                 return
 
 
