@@ -1,7 +1,8 @@
-import os, discord, random, traceback
+import os, discord, random, traceback, datetime
 from discord.ext import commands
 from dotenv import load_dotenv
 
+# Loading Discord token and guild IDs from an external resource
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
@@ -12,6 +13,7 @@ intents.presences = True
 intents.message_content = True
 client = discord.Client(intents=intents)
 
+# Anything within this event will run whenever the bot initially logs into guild
 @client.event
 async def on_ready():
     guild = discord.utils.get(client.guilds, name=GUILD)
@@ -19,7 +21,10 @@ async def on_ready():
         f'{client.user} is connected to the following guild:\n'
         f'{guild.name}(id: {guild.id})'
     )
+    fusilli = 0
+    cookie = 0
 
+# Anything within this event will run whenever there is a new member to the guild
 @client.event
 async def on_member_join(member):
     try:
@@ -28,14 +33,15 @@ async def on_member_join(member):
             f'FUSILLI: Welcome, {member.mention}! ...got any carrots?',
             'COOKIE: Hey, a new friend! *binkies*',
         ]
-    
+    # Print exception to console
     except Exception as e:
         print(e)
 
+# Anthing within this event will run whenever a message is sent in the chat channel
 @client.event
 async def on_message(message):
     try:
-             
+        # A growing collection of facts about my two bunnies
         pellet_messages = [
             'COOKIE FACT:\nCookie joined the Reid family in November 2022, exactly 1 year after Fusilli.',
             'COOKIE FACT:\nCookie is Fusilli\'s half-sister.  They have different father bunnies.',
@@ -50,7 +56,7 @@ async def on_message(message):
             'FUSILLI FACT:\nIt took almost a year of being bonded that Fusilli finally groomed Cookie.\nMeanwhile, Cookie is always taking care of Fusilli.',
             'FUSILLI FACT:\nFusilli has never been picked up. IT IS FORBIDDEN.'
         ]
-        
+        # A growing collection of bunny responses to receiving a carrot from a member in chat; chosen at random
         carrot_messages = [
             'COOKIE: Can I have a carrot?',
             'COOKIE: I wish I had a carrot...',
@@ -61,7 +67,7 @@ async def on_message(message):
             'FUSILLI: I wish I had a carrot...',
             'FUSILLI: Hey, Cookie! There are carrots over here!'
         ]
-
+        # A growing collection of bunny actions to occur; chosen at random 
         lettuce_messages = [
             '*Cookie just did a little binky!*',
             '*Fusilli just did a little binky!*',
@@ -72,7 +78,7 @@ async def on_message(message):
             '*Cookie is napping...*',
             '*Fusilli is napping...*'
         ]
-
+        # Check if message in chat was sent by the bot before continuing; Avoids infinite loops
         if message.author == client.user:
             return
         else:
@@ -81,13 +87,15 @@ async def on_message(message):
                 await message.channel.send(response)
                 # await message.channel.send("*Cookie is eating a carrot*")
                 await message.channel.send("*Fusilli is eating a carrot*")
+                fusilli += 1
                 return
             
-            if 'carrot' in message.content.lower() or '🥕' in message.content and 'cookie' in message.content.lower():
+            if '🥕' in message.content and 'cookie' in message.content.lower():
                 response = random.choice(carrot_messages)
                 await message.channel.send(response)
                 await message.channel.send("*Cookie is eating a carrot*")
                 # await message.channel.send("*Fusilli is eating a carrot*")
+                cookie += 1
                 return
             
             # Bunnies do an action if LETTUCE is mentioned in chat
@@ -100,6 +108,15 @@ async def on_message(message):
             if '!bunnyfact' in message.content.lower():
                 response3 = random.choice(pellet_messages)
                 await message.channel.send(response3)
+                return
+            
+            if '!carrotcount' in message.content.lower():
+                curr_date = datetime.datetime.now()
+                form_date = curr_date.strftime("%B %d %Y %H:%M:%S")
+                print('-------- TOTAL CARROT SCOREBOARD --------')
+                print(f'As of {form_date}')
+                print(f'Total carrots given to Fusilli: {fusilli}')
+                print(f'Total carrots given to Cookie : {cookie}')
                 return
 
 
