@@ -14,7 +14,7 @@ intents = discord.Intents.default()
 intents.typing = True
 intents.presences = True
 intents.message_content = True
-client = discord.Client(intents=intents)
+client = discord.Client(command_prefix='!', intents=intents)
 
 # Anything within this event will run whenever the bot initially logs into guild
 @client.event
@@ -25,6 +25,40 @@ async def on_ready():
         f'{guild.name}(id: {guild.id})'
     )
     
+@client.command()
+async def carrotcount(ctx):
+    global fusilli
+    global cookie
+    curr_date = datetime.datetime.now()
+    form_date = curr_date.strftime("%B %d %Y %H:%M:%S")
+    message1 = '-------- TOTAL CARROT SCOREBOARD --------'
+    message2 = f'As of {form_date}'
+    message3 = f'Total carrots given to Fusilli: {fusilli}'
+    message4 = f'Total carrots given to Cookie : {cookie}'
+    await ctx.send(message1)
+    await ctx.send(message2)
+    await ctx.send(message3)
+    await ctx.send(message4)
+
+@client.command()
+async def bunnyfact(ctx):
+    # A growing collection of facts about my two bunnies
+    pellet_messages = [
+        'COOKIE FACT:\nCookie joined the Reid family in November 2022, exactly 1 year after Fusilli.',
+        'COOKIE FACT:\nCookie is Fusilli\'s half-sister.  They have different father bunnies.',
+        'COOKIE FACT:\nCookie\'s name was originally \'Miss Piggy\'.\nWe didn\'t want to fat shame our bunny.',
+        'COOKIE FACT:\nCookie is not too fond of physical human contact. \nHowever, it is possible to get her in your arms for a snuggle.',
+        'COOKIE FACT:\nCookie\'s birthday is in May.',
+        'COOKIE FACT:\nCookie was named by Elizabeth. The color of her fur reminded Elizabeth of a cookie.',
+        'FUSILLI FACT:\nChuck regularly calls Fusilli by the nickname, \'Fus\'.  This is because Fusilli is very bold in everything he does,\nlike an unrelenting force...',
+        'FUSILLI FACT:\nMost bunnies like fruits and veggies. Fusilli eats pizza and chips.',
+        'FUSILLI FACT:\nFusilli\'s astrological sign is Leo. This makes sense because Fusilli loves to bask in the spotlight and celebrate...himself!',
+        'FUSILLI FACT:\nFusilli has a lynx coloured fur, and it\'s SUPER soft!',
+        'FUSILLI FACT:\nIt took almost a year of being bonded that Fusilli finally groomed Cookie.\nMeanwhile, Cookie is always taking care of Fusilli.',
+        'FUSILLI FACT:\nFusilli has never been picked up. IT IS FORBIDDEN.'
+    ]
+    response3 = random.choice(pellet_messages)
+    await ctx.send(response3)
 
 # Anything within this event will run whenever there is a new member to the guild
 @client.event
@@ -45,21 +79,21 @@ async def on_message(message):
     global fusilli
     global cookie
     try:
-        # A growing collection of facts about my two bunnies
-        pellet_messages = [
-            'COOKIE FACT:\nCookie joined the Reid family in November 2022, exactly 1 year after Fusilli.',
-            'COOKIE FACT:\nCookie is Fusilli\'s half-sister.  They have different father bunnies.',
-            'COOKIE FACT:\nCookie\'s name was originally \'Miss Piggy\'.\nWe didn\'t want to fat shame our bunny.',
-            'COOKIE FACT:\nCookie is not too fond of physical human contact. \nHowever, it is possible to get her in your arms for a snuggle.',
-            'COOKIE FACT:\nCookie\'s birthday is in May.',
-            'COOKIE FACT:\nCookie was named by Elizabeth. The color of her fur reminded Elizabeth of a cookie.',
-            'FUSILLI FACT:\nChuck regularly calls Fusilli by the nickname, \'Fus\'.  This is because Fusilli is very bold in everything he does,\nlike an unrelenting force...',
-            'FUSILLI FACT:\nMost bunnies like fruits and veggies. Fusilli eats pizza and chips.',
-            'FUSILLI FACT:\nFusilli\'s astrological sign is Leo. This makes sense because Fusilli loves to bask in the spotlight and celebrate...himself!',
-            'FUSILLI FACT:\nFusilli has a lynx coloured fur, and it\'s SUPER soft!',
-            'FUSILLI FACT:\nIt took almost a year of being bonded that Fusilli finally groomed Cookie.\nMeanwhile, Cookie is always taking care of Fusilli.',
-            'FUSILLI FACT:\nFusilli has never been picked up. IT IS FORBIDDEN.'
-        ]
+        # # A growing collection of facts about my two bunnies
+        # pellet_messages = [
+        #     'COOKIE FACT:\nCookie joined the Reid family in November 2022, exactly 1 year after Fusilli.',
+        #     'COOKIE FACT:\nCookie is Fusilli\'s half-sister.  They have different father bunnies.',
+        #     'COOKIE FACT:\nCookie\'s name was originally \'Miss Piggy\'.\nWe didn\'t want to fat shame our bunny.',
+        #     'COOKIE FACT:\nCookie is not too fond of physical human contact. \nHowever, it is possible to get her in your arms for a snuggle.',
+        #     'COOKIE FACT:\nCookie\'s birthday is in May.',
+        #     'COOKIE FACT:\nCookie was named by Elizabeth. The color of her fur reminded Elizabeth of a cookie.',
+        #     'FUSILLI FACT:\nChuck regularly calls Fusilli by the nickname, \'Fus\'.  This is because Fusilli is very bold in everything he does,\nlike an unrelenting force...',
+        #     'FUSILLI FACT:\nMost bunnies like fruits and veggies. Fusilli eats pizza and chips.',
+        #     'FUSILLI FACT:\nFusilli\'s astrological sign is Leo. This makes sense because Fusilli loves to bask in the spotlight and celebrate...himself!',
+        #     'FUSILLI FACT:\nFusilli has a lynx coloured fur, and it\'s SUPER soft!',
+        #     'FUSILLI FACT:\nIt took almost a year of being bonded that Fusilli finally groomed Cookie.\nMeanwhile, Cookie is always taking care of Fusilli.',
+        #     'FUSILLI FACT:\nFusilli has never been picked up. IT IS FORBIDDEN.'
+        # ]
         # A growing collection of bunny responses to receiving a carrot from a member in chat; chosen at random
         carrot_messages = [
             'COOKIE: Can I have a carrot?',
@@ -109,23 +143,23 @@ async def on_message(message):
                 return
         
             # Learn a bunny fact about COOKIE or FUSILLI
-            if '!bunnyfact' in message.content.lower():
-                response3 = random.choice(pellet_messages)
-                await message.channel.send(response3)
-                return
+            # if '!bunnyfact' in message.content.lower():
+            #     response3 = random.choice(pellet_messages)
+            #     await message.channel.send(response3)
+            #     return
             
-            if '!carrotcount' in message.content.lower():
-                curr_date = datetime.datetime.now()
-                form_date = curr_date.strftime("%B %d %Y %H:%M:%S")
-                message1 = '-------- TOTAL CARROT SCOREBOARD --------'
-                message2 = f'As of {form_date}'
-                message3 = f'Total carrots given to Fusilli: {fusilli}'
-                message4 = f'Total carrots given to Cookie : {cookie}'
-                await message.channel.send(message1)
-                await message.channel.send(message2)
-                await message.channel.send(message3)
-                await message.channel.send(message4)
-                return
+            # if '!carrotcount' in message.content.lower():
+            #     curr_date = datetime.datetime.now()
+            #     form_date = curr_date.strftime("%B %d %Y %H:%M:%S")
+            #     message1 = '-------- TOTAL CARROT SCOREBOARD --------'
+            #     message2 = f'As of {form_date}'
+            #     message3 = f'Total carrots given to Fusilli: {fusilli}'
+            #     message4 = f'Total carrots given to Cookie : {cookie}'
+            #     await message.channel.send(message1)
+            #     await message.channel.send(message2)
+            #     await message.channel.send(message3)
+            #     await message.channel.send(message4)
+            #     return
 
 
     except Exception as e:
