@@ -14,18 +14,19 @@ intents = discord.Intents.default()
 intents.typing = True
 intents.presences = True
 intents.message_content = True
-client = discord.Client(command_prefix='!', intents=intents)
+# client = discord.Client(intents=intents)
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 # Anything within this event will run whenever the bot initially logs into guild
-@client.event
+@bot.event
 async def on_ready():
-    guild = discord.utils.get(client.guilds, name=GUILD)
+    guild = discord.utils.get(bot.guilds, name=GUILD)
     print(
-        f'{client.user} is connected to the following guild:\n'
+        f'{bot.user} is connected to the following guild:\n'
         f'{guild.name}(id: {guild.id})'
     )
     
-@client.command()
+@bot.command(name='carrotcount')
 async def carrotcount(ctx):
     global fusilli
     global cookie
@@ -40,7 +41,11 @@ async def carrotcount(ctx):
     await ctx.send(message3)
     await ctx.send(message4)
 
-@client.command()
+@carrotcount.before_invoke
+async def carrotcount_suggestions(ctx):
+    ctx.command.suggestions = ["carrotcount"]
+
+@bot.command(name='bunnyfact')
 async def bunnyfact(ctx):
     # A growing collection of facts about my two bunnies
     pellet_messages = [
@@ -60,8 +65,12 @@ async def bunnyfact(ctx):
     response3 = random.choice(pellet_messages)
     await ctx.send(response3)
 
+@bunnyfact.before_invoke
+async def bunnyfact_suggestions(ctx):
+    ctx.command.suggestions = ["bunnyfact"]
+
 # Anything within this event will run whenever there is a new member to the guild
-@client.event
+@bot.event
 async def on_member_join(member):
     try:
         welcome_messages = [
@@ -74,7 +83,7 @@ async def on_member_join(member):
         print(e)
 
 # Anthing within this event will run whenever a message is sent in the chat channel
-@client.event
+@bot.event
 async def on_message(message):
     global fusilli
     global cookie
@@ -117,7 +126,7 @@ async def on_message(message):
             '*Fusilli is napping...*'
         ]
         # Check if message in chat was sent by the bot before continuing; Avoids infinite loops
-        if message.author == client.user:
+        if message.author == bot.user:
             return
         else:
             if '🥕' in message.content and 'fusilli' in message.content.lower():
@@ -141,6 +150,13 @@ async def on_message(message):
                 response2 = random.choice(lettuce_messages)
                 await message.channel.send(response2)
                 return
+            
+            if '!bunnyfact' in message.content.lower():
+                await bot.process_commands(message)
+                return
+            
+            if '!carrotcount' in message.content.lower():
+                await bot.process_commands(message)
         
             # Learn a bunny fact about COOKIE or FUSILLI
             # if '!bunnyfact' in message.content.lower():
@@ -161,9 +177,11 @@ async def on_message(message):
             #     await message.channel.send(message4)
             #     return
 
+            # await bot.process_commands(message)
+
 
     except Exception as e:
         print(f"An error occurred: {e}")
         traceback.print_exc()
 
-client.run(TOKEN)
+bot.run(TOKEN)
