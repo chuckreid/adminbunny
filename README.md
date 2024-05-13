@@ -1,6 +1,6 @@
-+------------------------------------------------------------------------------------+
-|                        ADMINBUNNIES Discord Bot v1.1                               |
-+------------------------------------------------------------------------------------+
+# ADMINBUNNIES Discord Bot v1.1
+
+## Introduction
 
 This file is a Discord bot written in Python. It is a simple project that I started because I have a Discord server and have recently learned Python.
 I have two bunnies and they come up in conversation often via chat mention or me posting photos.  
