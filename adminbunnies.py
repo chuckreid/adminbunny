@@ -1,5 +1,6 @@
 import os, discord, random, traceback, datetime
 from discord.ext import commands
+from discord import app_commands
 from dotenv import load_dotenv
 
 fusilli = 0
@@ -25,7 +26,7 @@ async def on_ready():
         f'{bot.user} is connected to the following guild:\n'
         f'{guild.name}(id: {guild.id})'
     )
-    
+
 @bot.command(name='carrotcount')
 async def carrotcount(ctx):
     global fusilli
